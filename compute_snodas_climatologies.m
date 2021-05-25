@@ -11,6 +11,8 @@
 %snodas
 %   2003
 %       01_Jan
+%            Hs
+%            SWE
 %       02_Feb
 %       etc.
 %   2004
@@ -33,13 +35,13 @@ fclose('all')
 
 %uncomment variable of interest.
 param='1036'; %Hs
-%variable='1034'; %Swe
+%param='1034'; %Swe
 
 %set directory locations...
-snodashome='/Volumes/dfh/Hill/snodas'; %root dir for snodas (local)
+snodashome='/Volumes/dfh-1/data/snodas/snodas_download'; %root dir for snodas (local)
 %snodashome='/nfs/attic/dfh/Hill/snodas'; %root (on lassen)
 
-outfiledir='/Volumes/dfh/Hill/snodas/dailyclim'; %dir for output (local)
+outfiledir='/Volumes/dfh-1/data/snodas/dailyclim'; %dir for output (local)
 %outfiledir='/nfs/attic/dfh/Hill/snodas/dailyclim'; %output (lassen)
 
 if ~exist(outfiledir)
@@ -54,14 +56,14 @@ ncol=6935;
 nrows=3351;
 
 %compute datenumbers of missing dates
-year=[2004 2004 2004 2005 2005 2005 2006 2006 2006 2006 2006 ...
+year=[2003 2004 2004 2004 2005 2005 2005 2006 2006 2006 2006 2006 ...
     2007 2007 2008 2008 2008 2009 2012];
-month=[2 8 9 6 8 8 8 8 9 9 10 2 3 3 6 6 8 12];
-day=[25 31 27 25 1 2 26 27 8 30 1 14 26 13 13 18 20 20];
+month=[10 2 8 9 6 8 8 8 8 9 9 10 2 3 3 6 6 8 12];
+day=[30 25 31 27 25 1 2 26 27 8 30 1 14 26 13 13 18 20 20];
 missingdates=datenum(year,month,day);
 
 %Begin the main loop over days 1-->365. 1 = Jan 1. 365 = Dec 31. 
-for j=274:365 
+for j=293:365 
     
     disp(['processing calendar day ' num2str(j)])
     
@@ -72,13 +74,13 @@ for j=274:365
     if j>=274   %this catches Oct, Nov, Dec days. I wish to do averaging over
                 %water years, not calendar years...
         startyear=2003;
-        endyear=2017;
+        endyear=2018;
     else
         startyear=2004;
-        endyear=2018;
+        endyear=2019;
     end
     
-    %begin the loop over the 15 years in the POR
+    %begin the loop over the 16 years in the POR
     for k=startyear:endyear
         disp(['processing year ' num2str(k)])
         
@@ -103,8 +105,13 @@ for j=274:365
                 D=num2str(d);
             end
             %establish full filename...
-            fname=['/' num2str(k) '/' monthfolders{m} ...
-                '/us_ssmv1' param 'tS__T0001TTNATS' num2str(k) M D '05HP001.dat'];
+            if strcmp(param,'1036')
+                fname=['/' num2str(k) '/' monthfolders{m} '/Hs' ...
+                    '/us_ssmv1' param 'tS__T0001TTNATS' num2str(k) M D '05HP001.dat'];
+            else
+                fname=['/' num2str(k) '/' monthfolders{m} '/SWE' ...
+                    '/us_ssmv1' param 'tS__T0001TTNATS' num2str(k) M D '05HP001.dat'];
+            end
             fname2=fullfile(snodashome,fname);
             %open file
             fid=fopen(fname2,'r','ieee-be'); %last item is machineformat (key!)

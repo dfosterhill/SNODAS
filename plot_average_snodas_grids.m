@@ -2,8 +2,10 @@
 %February 2019
 
 %this script will read in the 16bit signed integer grids that were
-%processed by the averagesnodas.m script. The user can select either Hs or
-%SWE grids. The plots are for for a domain specified by the user 
+%processed by the compute_snodas_climatologies.m script. 
+%The user can select either Hs or
+%SWE grids. The script below is set up to plot just the 'mean' but it 
+%is easily changed to plot min or max. The plots are for for a domain specified by the user 
 %(lat / lon limits). I have included several options but please add your 
 %own. All of the input files must be in a single folder (see below) and all
 %of the output files will go to a second folder designated by the user.
@@ -21,10 +23,20 @@ fclose('all')
 param='1036'; %Hs
 %param='1034'; %swe
 
+%specify domain
+%uncomment the bounding box of interest, or make your own!
+latlim=[25 53]; lonlim=[-127 -66]; domain='USA'; %USA
+%latlim=[41.5 46.5]; lonlim=[-125 -116]; %oregon
+%latlim=[45.5 49.25]; lonlim=[-125 -116.5]; %washington
+%latlim=[42.5 45.5]; lonlim=[-73 -70.5]; %new hampshire
+%latlim=[36.75 42.25]; lonlim=[-114.5 -108.5]; %utah
+%latlim=[40 42]; lonlim=[-112 -110]; %SLC area
+%latlim=[44.25 49.25]; lonlim=[-116 -109]; %western montana
+
 %set directory locations
-gridshome='/Volumes/dfh/Hill/snodas/dailyclim'; %root dir for grids
+gridshome='/Volumes/dfh-1/data/snodas/dailyclim'; %root dir for grids
 %gridshome='/nfs/attic/dfh/Hill/snodas/dailyclim'; %root (on lassen)
-outputdir='/Volumes/dfh/Hill/snodas/graphics';    %root dir for output
+outputdir='/Volumes/dfh-1/Hill/snodas_data_processing/graphics/snodas_daily_grids';    %root dir for output
 %outputdir='/nfs/attic/dfh/Hill/snodas/graphics';
 
 if ~exist(outputdir)
@@ -84,14 +96,7 @@ for j=1:365
     
     figure(1)
     set(gcf,'PaperPosition',[1 1 6 4]);
-    %uncomment the bounding box of interest, or make your own!
-    ax=worldmap([25 53],[-127 -66]); %continential USA
-    %ax=worldmap([41.5 46.5],[-125 -116]); %oregon
-    %ax=worldmap([45.5 49.25],[-125 -116.5]); %washington
-    %ax=worldmap([42.5 45.5],[-73 -70.5]); %new hampshire
-    %ax=worldmap([36.75 42.25],[-114.5 -108.5]); %utah
-    %ax=worldmap([40 42],[-112 -110]); %SLC area
-    %ax=worldmap([44.25 49.25],[-116 -109]); %western montana
+    ax=worldmap(latlim,lonlim); 
 
     geoshow(ax, states, 'DisplayType', 'polygon','FaceColor','none','HandleVisibility','off')
     hold on
@@ -114,7 +119,8 @@ for j=1:365
     else
         J=num2str(j);
     end
-    fnameout=fullfile(outputdir,[J 'image.png']);
+    %fnameout=fullfile(outputdir,[J 'image.png']);
+    fnameout=fullfile(outputdir,[domain '_' months{m} '_' D '.png']);
     print(gcf,'-dpng','-r300',fnameout); %300 dpi png images
     close(1)
 

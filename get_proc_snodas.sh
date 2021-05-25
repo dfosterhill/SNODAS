@@ -53,10 +53,12 @@ mkdir -p snodas_download
 cd snodas_download
 
 #loop over years and months to download files. USER CAN SET MONTHS AND YEARS
-for months in "09_Sep" "10_Oct" "11_Nov" "12_Dec" "01_Jan" "02_Feb" "03_Mar" "04_Apr" "05_Mar" "06_Jun" "07_Jul" "08_Aug" 
+#for months in "09_Sep" "10_Oct" "11_Nov" "12_Dec" "01_Jan" "02_Feb" "03_Mar" "04_Apr" "05_May" "06_Jun" "07_Jul" "08_Aug"
+for months in "01_Jan" "02_Feb" "03_Mar" "04_Apr" 
 
 	do
-	for years in {2003..2020}
+#	for years in {2003..2020}
+    for years in {2021..2021}
     	do
 	  		#next line pulls all days for the given month / year
 	  		wget -N ftp://sidads.colorado.edu/DATASETS/NOAA/G02158/masked/$years/"$months"/*.tar
@@ -76,7 +78,7 @@ for months in "09_Sep" "10_Oct" "11_Nov" "12_Dec" "01_Jan" "02_Feb" "03_Mar" "04
 	  	mkdir -p $years/"$months"/SWE
 	  	mkdir -p $years/"$months"/Hs
 	  	
-	  	# let's loop over files to move 1034 files to Hs folder and 1036 files to SWE 
+	  	# let's loop over files to move 1034 files to SWE folder and 1036 files to Hs 
 	  	# folder...the rest will be deleted. Easy to change this to keep additional
 	  	# variables of interest (1025SlL00, 1025SlL01, 1038, 1039, 1044, 1050)
 	  	
@@ -85,10 +87,10 @@ for months in "09_Sep" "10_Oct" "11_Nov" "12_Dec" "01_Jan" "02_Feb" "03_Mar" "04
 	  	do
 	  		case $files in
 	  			*1034*)
-	  			mv $files $years/"$months"/Hs/.
+	  			mv $files $years/"$months"/SWE/.
 	  			;;
 	  			*1036*)
-	  			mv $files $years/"$months"/SWE/.
+	  			mv $files $years/"$months"/Hs/.
 	  			;;
 	  		esac
 	  	done
